@@ -14,8 +14,6 @@ import (
 	"time"
 )
 
-const Author = "liujiawm@gmail.com"
-const Version = "1.0.2"
 
 // 取日历方式
 const (
@@ -79,6 +77,7 @@ type LunarDate struct {
 	LeapStr   string          `json:"leap_str"`   // 闰
 	MonthDays int             `json:"-"`          // 当月有多少天
 	LeapYear  int             `json:"leap_year"`  // 是否闰年，0不是闰年，大于就是闰几月
+	NextLeapYear  int             `json:"leap_year"`  // 下一年是否闰年，0不是闰年，大于就是闰几月
 	LeapMonth int             `json:"leap_month"` // 当前前是否是所闰的那个月，0不是，1本月就是闰月
 	YearGanZi *LunarYearGanZi `json:"gan_zi"`
 }
@@ -453,6 +452,7 @@ func (sc *Calendar) Solar2Lunar(sd *SolarDate) (*LunarDate, error) {
 	}
 
 	ld.LeapYear = sc.leap(ld.Year) // 闰几月，0为无闰月
+	ld.NextLeapYear = sc.leap(ld.Year+1) // 闰几月，0为无闰月
 
 	isLeapMonth := 0 // 初始,该月是否为闰月
 	if ld.LeapYear > 0 && (mc[mi]-math.Floor(mc[mi]))*2+1 != 1 { // 因mc(mi)=0对应到前一年农历11月,mc(mi)=1对应到前一年农历12月,mc(mi)=2对应到本年1月,依此类推
